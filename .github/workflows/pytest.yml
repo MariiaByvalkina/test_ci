@@ -1,23 +1,27 @@
 name: Testing
 
-on: push                                         # запускается на любом пуше
+on: push                                        # запускается на любом пуше
 
-jobs:                                            # набор шагов, которые выполняются на одной виртуальной машине
+jobs:                                           # набор шагов, которые выполняются на одной виртуальной машине
   build:
-    runs-on: ubuntu-latest                       # тип виртуальной машины
-    steps:                                       # начало списка шагов, которые будут выполняться по порядку
-      - uses: actions/checkout@v4                # клонирование репозитория
+    runs-on: ubuntu-latest                      # тип виртуальной машины
+    steps:                                      # начало списка шагов, которые будут выполняться по порядку
+      - uses: actions/checkout@v4               # клонируем репозиторий
 
-      - name: Install Python                     # устанавливается питон
+      - name: Установить Python                 # установка нужной версии Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies               # установить зависимости, список команд:
-        run: |
-          python -m pip install --upgrade pip    # обновить pip до последней версии
-          pip install pytest
-          pip install hypothesis
+      - name: Установить зависимости            # устанавливаем нужные зависимости
+        run: |                                  # последовательность команд для установки
+          python -m pip install --upgrade pip   # обновление pip до актуальной версии
+          pip install -r requirements.txt       # рекомендуем устанавливать зависимости через requirements.txt
+          pip install pytest                    # если нет в requirements.txt, установим отдельно pytest
+          pip install hypothesis                 # гипотеза тоже ставится отдельным пакетом
 
-      - name: Run tests
-        run: PYTHONPATH=.:$PYTHONPATH pytest tests/ -v
+      - name: Выполнить тесты                   # основной шаг для запуска тестов
+        env:                                    # добавляем переменные окружения
+          PYTHONPATH: ${{ github.workspace }}   # задаем путь для импорта модулей внутри рабочей области
+        run: |
+          pytest tests/ -v
