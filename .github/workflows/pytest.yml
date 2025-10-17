@@ -20,5 +20,4 @@ jobs:                                            # набор шагов, кот
           pip install hypothesis
 
       - name: Run tests
-        run: PYTHONPATH=.:$PYTHONPATH pytest tests/ -v# добавляется текущая директория в список путей Python, чтобы он видел src
-# pytest -v запускает все тесты в проекте
+        run: PYTHONPATH=.:$PYTHONPATH pytest tests/ -v
